@@ -20,7 +20,8 @@ const port = 3000
 app.listen(port, hostname, () => {
   console.log(`Hello Trung Quan , Server running at http://${hostname}:${port}`)
 })
-app.get("/", (req, res) => {
-  res.json({ message: 'API is working' })
-})
+
 app.use('/api/user', useRouter)
+app.get("/", (req, res) => {
+  res.json({ message: 'API is working at port 3000' })
+})
