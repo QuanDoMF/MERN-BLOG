@@ -22,6 +22,4 @@ app.listen(port, hostname, () => {
 })
 
 app.use('/api/user', useRouter)
-app.get("/", (req, res) => {
-  res.json({ message: 'API is working at port 3000' })
-})
+
