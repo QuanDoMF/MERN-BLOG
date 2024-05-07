@@ -1,9 +1,10 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import useRouter from '~/routes/userRoute'
+import { APIs } from '~/routes'
 dotenv.config()
-
+const app = express()
+app.use(express.json())
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
@@ -12,7 +13,8 @@ mongoose
   .catch((error) => {
     console.log(error);
   })
-const app = express()
+
+app.use('/api', APIs)
 
 const hostname = 'localhost'
 const port = 3000
@@ -21,5 +23,4 @@ app.listen(port, hostname, () => {
   console.log(`Hello Trung Quan , Server running at http://${hostname}:${port}`)
 })
 
-app.use('/api/user', useRouter)
 
