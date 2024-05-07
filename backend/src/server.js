@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { APIs } from '~/routes'
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 dotenv.config()
 const app = express()
 app.use(express.json())
@@ -15,7 +16,7 @@ mongoose
   })
 
 app.use('/api', APIs)
-
+app.use(errorHandlingMiddleware)
 const hostname = 'localhost'
 const port = 3000
 
