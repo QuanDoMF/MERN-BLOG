@@ -2,12 +2,15 @@
 import { Label, TextInput, Button, Alert, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { signInSuccess, signInStart, signInFailure } from "../redux/userSlice/userSlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 const SignIn = () => {
 
     const [formData, setFormData] = useState({})
-    const [errorMessage, setErrorMessage] = useState(null)
-    const [loading, setLoading] = useState(null)
 
+    const { loading, error: errorMessage } = useSelector(state => state.user)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleChangeInput = (e) => {
         setFormData({
@@ -19,28 +22,27 @@ const SignIn = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields')
+            return dispatch(signInFailure('Please fill out all fields'))
         }
         try {
-            setLoading(true)
-            setErrorMessage(null)
+            dispatch(signInStart())
             const response = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             })
             const data = await response.json()
+            console.log('data', data);
             if (data.success === false) {
-                setErrorMessage(data.message)
+                dispatch(signInFailure(data.message))
             }
-            setLoading(false)
             if (data.success === true) {
+                dispatch(signInSuccess(data.data))
                 navigate('/')
             }
         }
         catch (error) {
-            setErrorMessage(data.message)
-            setLoading(false)
+            dispatch(signInFailure(error.message))
         }
     }
     return (
